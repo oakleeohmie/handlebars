@@ -1,0 +1,103 @@
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <h1 class="px-5 mt-5 text-center">Hungry? Have a burger!</h1>
+            </br>
+
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h2 class="text-center ">Order Here</h2>
+        <div class="row d-flex justify-content-center">
+
+            <form class="add-burger">
+                <div class="form-group">
+                    <label for="newBurger" class="" style="font-weight: bold;">Burger name:</label>
+                    <input type="text" id="newBurger" name="name" style="height:25px;">
+                    <button type="submit" class="btn btn-primary" style="border: solid white 1px">Order</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+            <h3 class="text-center mt-5 ">MENU</h3>
+            <hr style="border-bottom: 3px dashed white;">
+            <ul>
+                {{#each burger}}
+                {{#unless this.devoured}}
+                <li class="mt-3" style="list-style:disc">
+                    {{this.burger_name}}
+                    <button data-id="{{this.id}}" type="button" class="btn btn-success eat  mr-3">Eat & Enjoy</button>
+
+
+                </li>
+                {{/unless}}
+                {{/each}}
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h3 class="text-center mt-5 ">EATEN</h3>
+            <hr style="border-bottom: 3px dashed white;">
+            <ul>
+                {{#each burger}}
+                {{#if this.devoured}}
+                <li class="mt-3" style="list-style:disc">
+                    {{this.burger_name}}
+                    <button data-id="{{this.id}}" type="button" class="btn btn-danger remove  mr-3">Delete
+                        Burger</button>
+                </li>
+                {{/if}}
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $(".add-burger").on("submit", function (event) {
+        event.preventDefault();
+
+        var newBurger = {
+            name: $("#newBurger").val().trim()
+        };
+        if ($("#newBurger").val() === "") {
+            alert("You haven't ordered a burger yet");
+        } else {
+            $.ajax("/api/add", {
+                type: "POST",
+                data: newBurger
+            }).then(function () {
+                console.log("Burger ordered");
+                location.reload();
+            });
+        }
+    });
+
+    $(".eat").on("click", function (event) {
+        event.preventDefault();
+
+        let id = $(this).attr("data-id");
+        console.log(id);
+        $.ajax("/api/eat/" + id, {
+            type: "PUT"
+        }).then(function (resp) {
+            console.log(resp);
+            location.reload();
+        });
+    });
+
+    $(".remove").on("click", function (event) {
+        event.preventDefault();
+
+        let id = $(this).attr("data-id");
+
+        console.log(id);
+        $.ajax("/api/remove/" + id, {
+            type: "DELETE"
+        }).then(function (resp) {
+            console.log(resp);
+            location.reload();
+        });
+    });
+</script>
