@@ -10,7 +10,7 @@ var orm = {
             cb(result);
         });
     },
-    create: function (burger_name, cb) {
+    createOne: function (burger_name, cb) {
         let queryString = "INSERT INTO burgers (burger_name) VALUES(?);";
         connection.query(queryString, [burger_name], (err, res) => {
             if (err) {
@@ -20,7 +20,7 @@ var orm = {
         });
     },
 
-    update: function (id, cb) {
+    updateOne: function (id, cb) {
         let queryString = "UPDATE burgers SET devoured = 1  WHERE id = ?;";
         connection.query(queryString, [id], (err, res) => {
             if (err) {
@@ -29,7 +29,7 @@ var orm = {
             cb(res);
         });
     },
-    delete: function (id, cb) {
+    deleteOne: function (id, cb) {
         let queryString = "DELETE FROM burgers WHERE id = ?";
         connection.query(queryString, [id], (err, res) => {
             if (err) {
